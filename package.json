@@ -1,0 +1,17 @@
+{
+  "name": "atp-active-record",
+  "version": "1.0.0",
+  "description": " A module for handling database work.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git.repo.goes.here"
+  },
+  "author": "Andrew Wittrock",
+  "license": "MIT",
+  "dependencies": {
+  }
+}
