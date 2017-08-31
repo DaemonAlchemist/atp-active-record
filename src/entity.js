@@ -65,15 +65,21 @@ export default class Entity {
         return this;
     }
 
-    list(callback) {
-        return this.db.get(this.tableName, callback);
+    list() {
+        return new Promise(callback => {
+            this.db.get(this.tableName, (err, rows, field) => callback([err, rows, field]));
+        });
     }
 
-    getById(id, callback) {
-        return this.where('id', id).get(callback);
+    getById(id) {
+        return this.where('id', id).get();
     }
 
-    get(callback) {
-        return this.db.get(this.tableName, (err, rows, field) => callback(err, rows[0], field));
+    get() {
+        return new Promise(callback => {
+            this.db.get(this.tableName, (err, rows, field) => {
+                callback([err, rows[0], field]);
+            });
+        });
     }
 }
