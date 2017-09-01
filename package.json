@@ -13,5 +13,6 @@
   "author": "Andrew Wittrock",
   "license": "MIT",
   "dependencies": {
+    "atp-sugar": "git+https://github.com/DaemonAlchemist/atp-sugar.git"
   }
 }

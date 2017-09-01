@@ -3,11 +3,14 @@
  */
 
 import database from './database';
+import {o} from 'atp-sugar';
 
 export default class Entity {
-    constructor(dbName, tableName) {
+    constructor(dbName, tableName, indices = []) {
         this.db = database(dbName);
         this.tableName = tableName;
+        this.indices = ['id'].concat(indices);
+        this.cache = indices.reduce((combined, column) => combined.merge({[column]: {}}), o({})).raw;
     }
 
     select() {
@@ -65,19 +68,37 @@ export default class Entity {
         return this;
     }
 
+    cache(rows) {
+        rows.forEach(data => {
+            this.indices.forEach(column => {
+                this.cache[column][data[column]] = data;
+            });
+        });
+    }
+
     list() {
         return new Promise(callback => {
-            this.db.get(this.tableName, (err, rows, field) => callback([err, rows, field]));
+            this.db.get(this.tableName, (err, rows, field) => {
+                this.cache(rows);
+                callback([err, rows, field]);
+            });
         });
     }
 
     getById(id) {
-        return this.where('id', id).get();
+        return this.getByIndex('id', id);
     }
 
+    getByIndex(column, val) {
+        return typeof this.cache[column][val] !== 'undefined'
+            ? new Promise(resolve => resolve([null, this.cache[column][val], column]))
+            : this.where(column, val).get();
+    }
     get() {
         return new Promise(callback => {
             this.db.get(this.tableName, (err, rows, field) => {
+                const data = rows[0];
+                this.cache([data]);
                 callback([err, rows[0], field]);
             });
         });
