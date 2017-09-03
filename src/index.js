@@ -4,5 +4,6 @@
 
 import database from "./database";
 import Entity from "./entity";
+import error from "./error";
 
-export {database, Entity};
+export {database, Entity, error};

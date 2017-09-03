@@ -43,29 +43,49 @@ export default class Entity {
         return this;
     }
 
-    update() {
-        this.db.update(this.tableName, ...arguments);
-        return this;
+    update(data) {
+        return new Promise((resolve, reject) => {
+            this.db.update(this.tableName, data, error => {
+                if(error) {reject(error);}
+                else {resolve();}
+            });
+        });
     }
 
     delete() {
-        this.db.delete(this.tableName, ...arguments);
-        return this;
+        return new Promise((resolve, reject) => {
+            this.db.delete(this.tableName, error => {
+                if(error) {reject(error);}
+                else {resolve();}
+            });
+        });
     }
 
-    insert() {
-        this.db.insert(this.tableName, ...arguments);
-        return this;
+    insert(data) {
+        return new Promise((resolve, reject) => {
+            this.db.insert(this.tableName, data, (error, info) => {
+                if(error) {reject(error);}
+                else {resolve(info);}
+            });
+        });
     }
 
-    insert_ignore() {
-        this.db.insert_ignore(this.tableName, ...arguments);
-        return this;
+    insert_ignore(data, onDuplicateKeyClause) {
+        return new Promise((resolve, reject) => {
+            this.db.insert_ignore(this.tableName, data, (error, info) => {
+                if(error) {reject(error);}
+                else {resolve(info);}
+            }, onDuplicateKeyClause);
+        });
     }
 
     count() {
-        this.db.count(this.tableName, ...arguments);
-        return this;
+        return new Promise((resolve, reject) => {
+            this.db.count(this.tableName, (error, rows, fields) => {
+                if(error) {reject(error);}
+                else {resolve(rows);}
+            });
+        });
     }
 
     cache(rows) {
@@ -77,10 +97,13 @@ export default class Entity {
     }
 
     list() {
-        return new Promise(callback => {
-            this.db.get(this.tableName, (err, rows, field) => {
-                this.cache(rows);
-                callback([err, rows, field]);
+        return new Promise((resolve, reject) => {
+            this.db.get(this.tableName, (error, rows, fields) => {
+                if(error) {reject(error);}
+                else {
+                    this.cache(rows);
+                    resolve(rows);
+                }
             });
         });
     }
@@ -95,11 +118,20 @@ export default class Entity {
             : this.where(column, val).get();
     }
     get() {
-        return new Promise(callback => {
-            this.db.get(this.tableName, (err, rows, field) => {
-                const data = rows[0];
-                this.cache([data]);
-                callback([err, rows[0], field]);
+        return new Promise((resolve, reject) => {
+            this.db.get(this.tableName, (error, rows, fields) => {
+                if(error) {reject(error);}
+                else if(rows.length === 0) {
+                    reject({
+                        syscall: 'getOne',
+                        code: 'NOTFOUND'
+                    });
+                }
+                else {
+                        this.cache(rows);
+                        resolve(rows[0]);
+                    }
+                }
             });
         });
     }
