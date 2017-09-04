@@ -130,7 +130,6 @@ export default class Entity {
                 else {
                         this.cache(rows);
                         resolve(rows[0]);
-                    }
                 }
             });
         });
