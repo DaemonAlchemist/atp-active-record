@@ -19,7 +19,10 @@
   "author": "Andrew Wittrock",
   "license": "MIT",
   "dependencies": {
-    "atp-sugar": "^0.1.5"
+    "atp-config": "^0.1.1",
+    "atp-sugar": "^0.1.5",
+    "atp-validator": "^0.1.1",
+    "mysql-activerecord": "^0.8.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
