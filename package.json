@@ -1,10 +1,16 @@
 {
   "name": "atp-active-record",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": " A module for handling database work.",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm run compile && mocha --compilers js:babel-core/register",
+    "test-quick": "mocha --compilers js:babel-core/register",
+    "compile": "babel --presets es2015 -d lib/ src/",
+    "prepublish": "npm run compile",
+    "major": "npm version major && git push && git push origin --tags && npm publish",
+    "minor": "npm version minor && git push && git push origin --tags && npm publish",
+    "patch": "npm version patch && git push && git push origin --tags && npm publish"
   },
   "repository": {
     "type": "git",
@@ -14,5 +20,12 @@
   "license": "MIT",
   "dependencies": {
     "atp-sugar": "^0.1.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.0"
   }
 }
