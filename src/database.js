@@ -9,8 +9,14 @@ let connections = {};
 
 export default name => {
   if(typeof connections[name] === 'undefined') {
-      connections[name] = new Db.Adapter(config.get(
-          'mysql.connection.' + (config.isset("mysql.connection." + name) ? name : "default")
+      connections[name] = new Db.Adapter(Object.assign({},
+          config.get('mysql.connection.' + (config.isset("mysql.connection." + name) ? name : "default")),
+          {
+              typeCast: (field, useDefaultTypeCasting) =>
+                  field.type === "BIT" && field.length === 1
+                      ? field.buffer()[ 0 ] === 1
+                      : useDefaultTypeCasting()
+          }
       ));
   }
   return connections[name];
