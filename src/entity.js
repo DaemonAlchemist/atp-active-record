@@ -10,7 +10,7 @@ export default class Entity {
         this.db = database(dbName);
         this.tableName = tableName;
         this.indices = ['id'].concat(indices);
-        this.cache = indices.reduce((combined, column) => combined.merge({[column]: {}}), o({})).raw;
+        this._cache = this.indices.reduce((combined, column) => combined.merge({[column]: {}}), o({})).raw;
     }
 
     select() {
@@ -91,7 +91,7 @@ export default class Entity {
     cache(rows) {
         rows.forEach(data => {
             this.indices.forEach(column => {
-                this.cache[column][data[column]] = data;
+                this._cache[column][data[column]] = data;
             });
         });
     }
@@ -113,10 +113,11 @@ export default class Entity {
     }
 
     getByIndex(column, val) {
-        return typeof this.cache[column][val] !== 'undefined'
+        return typeof this._cache[column][val] !== 'undefined'
             ? new Promise(resolve => resolve([null, this.cache[column][val], column]))
             : this.where(column, val).get();
     }
+
     get() {
         return new Promise((resolve, reject) => {
             this.db.get(this.tableName, (error, rows, fields) => {
