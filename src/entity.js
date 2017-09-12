@@ -96,6 +96,11 @@ export default class Entity {
         });
     }
 
+    filter(filters) {
+        //TODO:  Filter on standard list filters
+        return this;
+    }
+
     list() {
         return new Promise((resolve, reject) => {
             this.db.get(this.tableName, (error, rows, fields) => {
