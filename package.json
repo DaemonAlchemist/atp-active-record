@@ -1,6 +1,6 @@
 {
   "name": "atp-active-record",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": " A module for handling database work.",
   "main": "lib/index.js",
   "scripts": {
