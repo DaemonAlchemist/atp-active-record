@@ -23,12 +23,12 @@ export default class Entity {
         return this;
     }
 
-    order_by() {
+    orderBy() {
         this.db.order_by(...arguments);
         return this;
     }
 
-    group_by() {
+    groupBy() {
         this.db.group_by(...arguments);
         return this;
     }
@@ -70,7 +70,7 @@ export default class Entity {
         });
     }
 
-    insert_ignore(data, onDuplicateKeyClause) {
+    insertIgnore(data, onDuplicateKeyClause) {
         return new Promise((resolve, reject) => {
             this.db.insert_ignore(this.tableName, data, (error, info) => {
                 if(error) {reject(error);}
@@ -97,7 +97,20 @@ export default class Entity {
     }
 
     filter(filters) {
-        //TODO:  Filter on standard list filters
+        let offset = 0;
+        let pageSize = 999999999999;
+        o(filters).map((value, key) => {
+            switch(key) {
+                case 'columns':  this.select(value);     break;
+                case 'sort':     this.orderBy(value);    break;
+                case 'offset':   offset = value;         break;
+                case 'pageSize': pageSize = value;       break;
+                default:         this.where(key, value); break;
+            }
+        });
+
+        this.limit(pageSize, offset);
+
         return this;
     }
 
