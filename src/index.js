@@ -5,5 +5,9 @@
 import database from "./database";
 import Entity from "./entity";
 import error from "./error";
+import config from "atp-config";
+import validators from "./validators/index";
+
+config.setDefaults({validators});
 
 export {database, Entity, error};
