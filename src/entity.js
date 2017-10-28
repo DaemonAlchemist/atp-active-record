@@ -43,6 +43,15 @@ export default class Entity {
         return this;
     }
 
+    query(query) {
+        return new Promise((resolve, reject) => {
+            this.db.query(query, (error, results) => {
+                if(error) {reject(error);}
+                else {resolve(results);}
+            });
+        });
+    }
+
     update(data) {
         return new Promise((resolve, reject) => {
             this.db.update(this.tableName, data, error => {
@@ -114,12 +123,12 @@ export default class Entity {
         return this;
     }
 
-    list() {
+    list(cacheResults = true) {
         return new Promise((resolve, reject) => {
             this.db.get(this.tableName, (error, rows, fields) => {
                 if(error) {reject(error);}
                 else {
-                    this.cache(rows);
+                    if(cacheResults) this.cache(rows);
                     resolve(rows);
                 }
             });
@@ -136,7 +145,7 @@ export default class Entity {
             : this.where(column, val).get();
     }
 
-    get() {
+    get(cacheResults = true) {
         return new Promise((resolve, reject) => {
             this.db.get(this.tableName, (error, rows, fields) => {
                 if(error) {reject(error);}
@@ -147,8 +156,8 @@ export default class Entity {
                     });
                 }
                 else {
-                        this.cache(rows);
-                        resolve(rows[0]);
+                    if(cacheResults) this.cache(rows);
+                    resolve(rows[0]);
                 }
             });
         });
