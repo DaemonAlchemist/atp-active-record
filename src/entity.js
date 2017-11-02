@@ -6,46 +6,56 @@ import database from './database';
 import {o} from 'atp-sugar';
 
 export default class Entity {
-    constructor(dbName, tableName, indices = []) {
-        this.db = database(dbName);
+    constructor(dbName, tableName) {
+        this._db = null;
+        this.dbName = dbName;
         this.tableName = tableName;
-        this.indices = ['id'].concat(indices);
-        this._cache = this.indices.reduce((combined, column) => combined.merge({[column]: {}}), o({})).raw;
+    }
+
+    db() {
+        if(!this._db) {
+            this._db = database(this.dbName);
+        }
+        return this._db;
+    }
+
+    table() {
+        return this.tableName;
     }
 
     select() {
-        this.db.select(...arguments);
+        this.db().select(...arguments);
         return this;
     }
 
     where() {
-        this.db.where(...arguments);
+        this.db().where(...arguments);
         return this;
     }
 
     orderBy() {
-        this.db.order_by(...arguments);
+        this.db().order_by(...arguments);
         return this;
     }
 
     groupBy() {
-        this.db.group_by(...arguments);
+        this.db().group_by(...arguments);
         return this;
     }
 
     join() {
-        this.db.join(...arguments);
+        this.db().join(...arguments);
         return this;
     }
 
     limit() {
-        this.db.limit(...arguments);
+        this.db().limit(...arguments);
         return this;
     }
 
     query(query) {
         return new Promise((resolve, reject) => {
-            this.db.query(query, (error, results) => {
+            this.db().query(query, (error, results) => {
                 if(error) {reject(error);}
                 else {resolve(results);}
             });
@@ -54,7 +64,7 @@ export default class Entity {
 
     update(data) {
         return new Promise((resolve, reject) => {
-            this.db.update(this.tableName, data, error => {
+            this.db().update(this.tableName, data, error => {
                 if(error) {reject(error);}
                 else {resolve();}
             });
@@ -63,7 +73,7 @@ export default class Entity {
 
     delete() {
         return new Promise((resolve, reject) => {
-            this.db.delete(this.tableName, error => {
+            this.db().delete(this.tableName, error => {
                 if(error) {reject(error);}
                 else {resolve();}
             });
@@ -72,7 +82,7 @@ export default class Entity {
 
     insert(data) {
         return new Promise((resolve, reject) => {
-            this.db.insert(this.tableName, data, (error, info) => {
+            this.db().insert(this.tableName, data, (error, info) => {
                 if(error) {reject(error);}
                 else {resolve(info);}
             });
@@ -81,7 +91,7 @@ export default class Entity {
 
     insertIgnore(data, onDuplicateKeyClause) {
         return new Promise((resolve, reject) => {
-            this.db.insert_ignore(this.tableName, data, (error, info) => {
+            this.db().insert_ignore(this.tableName, data, (error, info) => {
                 if(error) {reject(error);}
                 else {resolve(info);}
             }, onDuplicateKeyClause);
@@ -90,17 +100,9 @@ export default class Entity {
 
     count() {
         return new Promise((resolve, reject) => {
-            this.db.count(this.tableName, (error, rows, fields) => {
+            this.db().count(this.tableName, (error, rows, fields) => {
                 if(error) {reject(error);}
                 else {resolve(rows);}
-            });
-        });
-    }
-
-    cache(rows) {
-        rows.forEach(data => {
-            this.indices.forEach(column => {
-                this._cache[column][data[column]] = data;
             });
         });
     }
@@ -123,12 +125,11 @@ export default class Entity {
         return this;
     }
 
-    list(cacheResults = true) {
+    list() {
         return new Promise((resolve, reject) => {
-            this.db.get(this.tableName, (error, rows, fields) => {
+            this.db().get(this.tableName, (error, rows, fields) => {
                 if(error) {reject(error);}
                 else {
-                    if(cacheResults) this.cache(rows);
                     resolve(rows);
                 }
             });
@@ -140,14 +141,12 @@ export default class Entity {
     }
 
     getByIndex(column, val) {
-        return typeof this._cache[column][val] !== 'undefined'
-            ? new Promise(resolve => resolve([null, this.cache[column][val], column]))
-            : this.where(column, val).get();
+        return this.where(column, val).get();
     }
 
-    get(cacheResults = true) {
+    get() {
         return new Promise((resolve, reject) => {
-            this.db.get(this.tableName, (error, rows, fields) => {
+            this.db().get(this.tableName, (error, rows, fields) => {
                 if(error) {reject(error);}
                 else if(rows.length === 0) {
                     reject({
@@ -156,7 +155,6 @@ export default class Entity {
                     });
                 }
                 else {
-                    if(cacheResults) this.cache(rows);
                     resolve(rows[0]);
                 }
             });
