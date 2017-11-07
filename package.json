@@ -16,6 +16,7 @@
     "major-clean": "npm install && npm run major && rm -rf node_modules",
     "minor-clean": "npm install && npm run minor && rm -rf node_modules",
     "patch-clean": "npm install && npm run patch && rm -rf node_modules",
+    "check-dependencies": "dependency-check ./package.json && dependency-check ./package.json --unused",
     "check": "ncu --packageFile package.json",
     "evergreen": "ncu -ua --packageFile package.json"
   },
@@ -27,6 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "atp-config": ">=0.3.2",
+    "atp-rest": "^0.17.1",
     "atp-sugar": ">=0.8.1",
     "atp-validator": ">=0.11.1",
     "mysql-activerecord": "^0.8.6"
@@ -36,6 +38,7 @@
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
+    "dependency-check": "^2.9.1",
     "mocha": "^4.0.1"
   }
 }
