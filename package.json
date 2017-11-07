@@ -15,7 +15,9 @@
     "patch": "npm version patch && npm run new-tag",
     "major-clean": "npm install && npm run major && rm -rf node_modules",
     "minor-clean": "npm install && npm run minor && rm -rf node_modules",
-    "patch-clean": "npm install && npm run patch && rm -rf node_modules"
+    "patch-clean": "npm install && npm run patch && rm -rf node_modules",
+    "check": "ncu --packageFile package.json",
+    "evergreen": "ncu -ua --packageFile package.json"
   },
   "repository": {
     "type": "git",
@@ -24,16 +26,16 @@
   "author": "Andrew Wittrock",
   "license": "MIT",
   "dependencies": {
-    "atp-config": ">=0.1.1",
-    "atp-sugar": ">=0.1.5",
-    "atp-validator": ">=0.1.1",
+    "atp-config": ">=0.3.2",
+    "atp-sugar": ">=0.8.1",
+    "atp-validator": ">=0.11.1",
     "mysql-activerecord": "^0.8.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
+    "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
-    "mocha": "^3.5.0"
+    "mocha": "^4.0.1"
   }
 }
