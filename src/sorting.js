@@ -6,7 +6,7 @@ import {o} from 'atp-sugar';
 import validator from 'atp-validator';
 import {respondWith} from 'atp-rest';
 
-export default (model, parentFieldName) => ({
+export const sorting = (model, parentFieldName) => ({
     nextSortOrder: parentId => new Promise((resolve, reject) => {
         model.select("MAX(sortOrder) + 1 as nextSortOrder")
             .groupBy(parentFieldName)

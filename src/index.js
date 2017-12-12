@@ -7,7 +7,7 @@ import Entity from "./entity";
 import error from "./error";
 import config from "atp-config";
 import validators from "./validators/index";
-import sorting from "./sorting";
+import {sorting} from "./sorting";
 
 config.setDefaults({validators});
 
