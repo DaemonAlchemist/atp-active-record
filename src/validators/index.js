@@ -44,19 +44,21 @@ export default {
 
     validMoveRequest: req => validate(
         (resolve, reject) => {
-            validator()
-                .required(req.body.action, "Action")
-                .required(req.body.targetId, "Target id")
-                .required(req.body.sourceId, "Source id")
-                .isOneOf(req.body.action, ["into", "after"], "Action")
-                .isInteger(req.body.targetId, "Target id")
-                .isInteger(req.body.sourceId, "Source id")
-                .custom(validate(
-                    req.body.targetId !== req.body.sourceId,
-                    "Cannot move an arc relative to itself (targetId cannot equal sourceId)",
-                    400
-                ))
-                .then(resolve, errors => reject(errors));
+            const v = validator();
+            v.required(req.body.action, "Action")
+             .isOneOf(req.body.action, ["into", "after"], "Action");
+            if(req.body.action === 'after') {
+                v.required(req.body.targetId, "Target id")
+                 .isInteger(req.body.targetId, "Target id");
+            }
+            v.required(req.body.sourceId, "Source id")
+             .isInteger(req.body.sourceId, "Source id")
+             .custom(validate(
+                req.body.targetId !== req.body.sourceId,
+                "Cannot move an arc relative to itself (targetId cannot equal sourceId)",
+                400
+             ))
+             .then(resolve, errors => reject(errors));
         },
         "Invalid move request",
         400
