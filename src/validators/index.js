@@ -54,7 +54,7 @@ export default {
             v.required(req.body.sourceId, "Source id")
              .isInteger(req.body.sourceId, "Source id")
              .custom(validate(
-                req.body.targetId !== req.body.sourceId,
+                req.body.targetId !== req.body.sourceId || req.body.action === 'into',
                 "Cannot move an arc relative to itself (targetId cannot equal sourceId)",
                 400
              ))
