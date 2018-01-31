@@ -112,11 +112,11 @@ export default class Entity {
         let pageSize = 999999999999;
         o(filters).map((value, key) => {
             switch(key) {
-                case 'columns':  this.select(value);     break;
-                case 'sort':     this.orderBy(value);    break;
-                case 'offset':   offset = value;         break;
-                case 'pageSize': pageSize = value;       break;
-                default:         this.where(key, value); break;
+                case 'columns':  this.select(value);         break;
+                case 'sort':     this.orderBy(value);        break;
+                case 'offset':   offset = parseInt(value);   break;
+                case 'perPage':  pageSize = parseInt(value); break;
+                default:         this.where(key, value);     break;
             }
         });
 
@@ -127,12 +127,16 @@ export default class Entity {
 
     list() {
         return new Promise((resolve, reject) => {
-            this.db().get(this.tableName, (error, rows, fields) => {
-                if(error) {reject(error);}
-                else {
-                    resolve(rows);
-                }
-            });
+            try {
+                this.db().get(this.tableName, (error, rows, fields) => {
+                    if(error) {reject(error);}
+                    else {
+                        resolve(rows);
+                    }
+                });
+            } catch(e) {
+                reject(e);
+            }
         });
     }
 
@@ -146,18 +150,22 @@ export default class Entity {
 
     get() {
         return new Promise((resolve, reject) => {
-            this.db().get(this.tableName, (error, rows, fields) => {
-                if(error) {reject(error);}
-                else if(rows.length === 0) {
-                    reject({
-                        syscall: 'getOne',
-                        code: 'NOTFOUND'
-                    });
-                }
-                else {
-                    resolve(rows[0]);
-                }
-            });
+            try {
+                this.db().get(this.tableName, (error, rows, fields) => {
+                    if(error) {reject(error);}
+                    else if(rows.length === 0) {
+                        reject({
+                            syscall: 'getOne',
+                            code: 'NOTFOUND'
+                        });
+                    }
+                    else {
+                        resolve(rows[0]);
+                    }
+                });
+            } catch(e) {
+                reject(e);
+            }
         });
     }
 }
