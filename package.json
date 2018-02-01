@@ -27,9 +27,9 @@
   "author": "Andrew Wittrock",
   "license": "MIT",
   "dependencies": {
-    "atp-config": ">=0.3.4",
+    "atp-config": ">=0.3.5",
     "atp-rest": "^0.20.0",
-    "atp-sugar": ">=0.8.3",
+    "atp-sugar": ">=0.8.4",
     "atp-validator": ">=0.12.0",
     "mysql-activerecord": "^0.8.6"
   },
