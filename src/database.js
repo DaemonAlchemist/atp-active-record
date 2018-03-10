@@ -13,9 +13,9 @@ export default name => {
           config.get('mysql.connection.' + (config.isset("mysql.connection." + name) ? name : "default")),
           {
               typeCast: (field, useDefaultTypeCasting) =>
-                  field.type === "BIT" && field.length === 1
-                      ? field.buffer()[ 0 ] === 1
-                      : useDefaultTypeCasting()
+                  field.type === "BIT" && field.length === 1 ? field.buffer()[ 0 ] === 1 :
+                  field.type === 'DATE'                      ? field.string() :
+                                                               useDefaultTypeCasting()
           }
       ));
   }
