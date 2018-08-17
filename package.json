@@ -27,18 +27,20 @@
   "author": "Andrew Wittrock",
   "license": "MIT",
   "dependencies": {
-    "atp-config": ">=0.3.5",
-    "atp-rest": "^0.22.0",
-    "atp-sugar": ">=0.8.4",
+    "atp-config": ">=0.3.6",
+    "atp-rest": "^0.24.0",
+    "atp-sugar": ">=0.9.1",
     "atp-validator": ">=0.12.1",
-    "mysql-activerecord": "^0.8.6"
+    "is-number": "^7.0.0",
+    "mysql-activerecord": "^0.8.6",
+    "type-of": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
-    "dependency-check": "^3.1.0",
-    "mocha": "^5.0.4"
+    "dependency-check": "^3.2.0",
+    "mocha": "^5.2.0"
   }
 }

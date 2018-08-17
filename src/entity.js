@@ -5,6 +5,7 @@
 import database from './database';
 import {o} from 'atp-sugar';
 import typeOf from "type-of";
+import isNumber from 'is-number';
 
 export default class Entity {
     constructor(dbName, tableName) {
@@ -127,9 +128,10 @@ export default class Entity {
     }
 
     filterField(key, value) {
-        switch(typeOf(value)) {
-            case "string": this.where(`${key} like "%${value}%"`); break;
-            default:       this.where(key, value);
+        if(isNumber(value) || typeOf(value) === 'boolean') {
+            this.where(key, value);
+        } else {
+            this.where(`${key} like "%${value}%"`);
         }
     }
 
