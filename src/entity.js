@@ -4,6 +4,7 @@
 
 import database from './database';
 import {o} from 'atp-sugar';
+import typeOf from "type-of";
 
 export default class Entity {
     constructor(dbName, tableName) {
@@ -112,17 +113,24 @@ export default class Entity {
         let pageSize = 999999999999;
         o(filters).map((value, key) => {
             switch(key) {
-                case 'columns':  this.select(value);         break;
-                case 'sort':     this.orderBy(value);        break;
-                case 'offset':   offset = parseInt(value);   break;
-                case 'perPage':  pageSize = parseInt(value); break;
-                default:         this.where(key, value);     break;
+                case 'columns':  this.select(value);           break;
+                case 'sort':     this.orderBy(value);          break;
+                case 'offset':   offset = parseInt(value);     break;
+                case 'perPage':  pageSize = parseInt(value);   break;
+                default:         this.filterField(key, value); break;
             }
         });
 
         this.limit(pageSize, offset);
 
         return this;
+    }
+
+    filterField(key, value) {
+        switch(typeOf(value)) {
+            case "string": this.where(`${key} like "%${value}%"`); break;
+            default:       this.where(key, value);
+        }
     }
 
     list() {
