@@ -131,7 +131,11 @@ export default class Entity {
         if(isNumber(value) || typeOf(value) === 'boolean') {
             this.where(key, value);
         } else {
-            this.where(`${key} like "%${value}%"`);
+            if(value[0] === '"' && value[value.length-1] === '"') {
+                this.where(`${key} = "${value.substr(1, value.length - 2)}"`);
+            } else {
+                this.where(`${key} like "%${value}%"`);
+            }
         }
     }
 
