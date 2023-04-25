@@ -24,7 +24,7 @@
     "type": "git",
     "url": "https://github.com/DaemonAlchemist/atp-active-record.git"
   },
-  "author": "Andrew Wittrock",
+  "author": "DaemonAlchemist",
   "license": "MIT",
   "dependencies": {
     "atp-config": ">=0.3.6",
